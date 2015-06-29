@@ -26,18 +26,19 @@ $config = [
     ]
 ];
 
+$moveProgram = [1, 1];
+
 // Let's build us a robot :)
 $robot = new Robot($config);
 $robot->setSensor( new Sensors([]) )
     ->setLocalization( new Localization([]) )
     ->setMovement(new Movement($config['biasMatrix']));
 
-foreach ($robot->getSensor() as $sensorData) {
+foreach ($robot->getSensor() as $i => $sensorData) {
     $robot->sense($sensorData);
-    $robot->move(1);
-    $robot->sense($sensorData);
-    $robot->showWorld();
+    $robot->move($moveProgram[$i]);
 }
+$robot->showWorld();
 
 
 

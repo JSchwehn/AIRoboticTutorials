@@ -4,7 +4,7 @@
 class Sensors extends GetterSetter implements \Iterator, \Countable
 {
 
-    private $sensorReadings = ['red', 'green'];
+    private $sensorReadings = ['red', 'red'];
     private $cursor = 0;
 
 
