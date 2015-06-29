@@ -3,6 +3,9 @@ require_once 'GetterSetter.php';
 
 class Localization extends GetterSetter
 {
+    /**
+     * @param array $params
+     */
     public function __construct(array $params = [])
     {
         $this->load($params);
@@ -15,17 +18,18 @@ class Localization extends GetterSetter
      * Updates the internal probability matrix
      *
      * @param $input
+     * @param Robot $robot
      * @return $this
      */
-    public function sense($input)
+    public function sense($input, Robot $robot)
     {
         $retVal = [];
         // Update measurement
-        foreach ($this->getProbabilityMatrix() as $index=>$p) {
-            if($input == $this->getWorld()[$index]) {
-                $retVal[] = $this->getPHit() * $p;
+        foreach ($robot->getProbabilityMatrix() as $index => $p) {
+            if ($input == $robot->getWorld()[$index]) {
+                $retVal[] = $robot->getPHit() * $p;
             } else {
-                $retVal[] = $this->getPMiss() * $p;
+                $retVal[] = $robot->getPMiss() * $p;
             }
         }
 
@@ -35,13 +39,7 @@ class Localization extends GetterSetter
             $retVal[$index] = $retVal[$index] * (1 / $normalisationFactor);
         }
 
-        $this->setProbabilityMatrix($retVal);
-        print_r($this->config);
+        $robot->setProbabilityMatrix($retVal);
         return $this;
-    }
-
-    public function showProbabilityMatrix()
-    {
-        //var_export($this->getProbabilityMatrix());
     }
 }

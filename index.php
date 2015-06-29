@@ -8,7 +8,6 @@ require_once 'Localization.php';
 require_once 'Sensors.php';
 require_once 'Robot.php';
 require_once 'Movement.php';
-require_once 'Helper.php';
 
 $config = [
     // Probability adjustment that we are right
@@ -19,20 +18,29 @@ $config = [
     'world' => ['green', 'red', 'red', 'green', 'green'],
     // That what the system is thinking where it is.
     'probabilityMatrix' => [0, 1, 0, 0, 0],
+//    'probabilityMatrix' => [0.2, 0.2, 0.2, 0.2, 0.2],
+    'biasMatrix' => [ // todo Move to extra class and assure that the sum of the biasMatrix can not exceed 1.0
+        'over' => 0.1,  // Chance that we overshoot slightly
+        'under' => 0.1, // Chance that we undershoot shoot slightly
+        'exact' => 0.8  // Chance that we hit our new position on the first try
+    ]
 ];
 
 // Let's build us a robot :)
 $robot = new Robot($config);
 $robot->setSensor( new Sensors([]) )
     ->setLocalization( new Localization([]) )
-    ->setMovement( new Movement([]) );
-//$robot->sense();
-$robot->showWorld();
-$robot->move( 1 );
-$robot->sense();
-$robot->showWorld();
+    ->setMovement(new Movement($config['biasMatrix']));
 
-$robot->move( 1 );
-$robot->showWorld();
+foreach ($robot->getSensor() as $sensorData) {
+    $robot->sense($sensorData);
+    $robot->move(1);
+    $robot->sense($sensorData);
+    $robot->showWorld();
+}
+
+
+
+
 
 

@@ -23,6 +23,9 @@ abstract class GetterSetter
             if (!isset($this->config[$varName])) {
                 throw new \Exception(get_class($this) . ': Method ' . $functionName . ' does not exists.');
             }
+            if (is_array($this->config[$varName])) {
+                reset($this->config[$varName]);
+            }
             return $this->config[$varName];
         }
     }

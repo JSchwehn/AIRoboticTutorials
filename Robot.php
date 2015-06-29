@@ -46,6 +46,21 @@ class Robot extends GetterSetter {
     }
 
     /**
+     * Measurement Update Function
+     *
+     * That's where we are scanning the world trying to find the place where are at.
+     * Updates the internal probability matrix
+     *
+     * @param $input
+     * @return $this
+     */
+    public function sense($input)
+    {
+
+        return $this->getLocalization()->sense($input, $this);
+    }
+
+    /**
      * @return Localization
      */
     public function getLocalization()
@@ -64,6 +79,12 @@ class Robot extends GetterSetter {
         return $this;
     }
 
+    public function move($units)
+    {
+        $move = $this->getMovement()->move($this->getProbabilityMatrix(),$units);
+        $this->setProbabilityMatrix($move);
+    }
+
     /**
      * @return Movement
      */
@@ -80,26 +101,6 @@ class Robot extends GetterSetter {
     {
         $this->movement = $movement;
         return $this;
-    }
-
-    /**
-     *
-     */
-    public function updateWorld()
-    {
-        foreach($this->sensors->getReadings() as $sensorReading) {
-            $this->localization->sense($sensorReading)->showProbabilityMatrix();
-        }
-    }
-
-    public function sense()
-    {
-        $this->getSensor()->getReadings();
-    }
-    public function move($units)
-    {
-        $move = $this->getMovement()->move($this->getProbabilityMatrix(),$units);
-        $this->setProbabilityMatrix($move);
     }
 
     public function showWorld()
